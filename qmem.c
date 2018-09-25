@@ -7,60 +7,91 @@ HW#3*/
 #include <stdlib.h>
 #include "qmem.h"
 
-struct Q
-{
-    int Index;
-    char Data[256];
-    Q * next;
-};
-typedef struct Q * QPtr = NULL;
-
 //Function Implementations
 int qmem_alloc(unsigned num_bytes, void ** rslt)
 {
-    int ErrorCode;
+    int ErrorCode = -2;
 
-    if (rslt == NULL)
+    if (num_bytes < 0)  //checks if num_bytes is
     {
-        QPtr = (struct Q*) malloc (sizeof(struct Q));
-        QPtr -> next = NULL;
-        ErrorCode =  0;
-    }
-    else if (rslt != NULL)
-    {
-        ErrorCode = qmem_alloc(sizeof(struct Q), (void **) &QPtr);
+        printf("Memory Allocation Error\n");
+        ErrorCode = -1;
     }
     else
-        ErrorCode = -2;     //default return if neither allocation or detection is done
-
+    {
+        if (rslt == NULL)
+        {
+            (*rslt) = (void*) malloc (num_bytes);
+            ErrorCode =  0;
+        }
+        else
+            ErrorCode = -2;     //default return if neither allocation or detection is done
+    }
     return ErrorCode;
 }
 
 int qmem_allocz(unsigned num_bytes, void ** rslt)
 {
-    int ErrorCode;
+    int ErrorCode = -2;
+
+    if (num_bytes < 0)  //checks if num_bytes is
+    {
+        printf("Memory Allocation and Initialization Error\n");
+        ErrorCode = -1;
+    }
+    else
+    {
+        if (rslt == NULL)
+        {
+            (*rslt) = (void*) calloc (sizeof(*rslt), num_bytes);
+            ErrorCode =  0;
+        }
+        else
+            ErrorCode = -2;     //default return if neither allocation or detection is done
+    }
+    return ErrorCode;
+}
+
+int qmem_allocv(unsigned num_bytes, int mark, void ** rslt)
+{
+    int ErrorCode = -2;
+    unsigned n = mark;
+    unsigned lower8bits = n & 0xFF;
+
+    if (num_bytes < 0)  //checks if num_bytes is
+    {
+        printf("Memory Allocation and Initialization Error\n");
+        ErrorCode = -1;
+    }
+    else
+    {
+        if (rslt == NULL)
+        {
+            (*rslt) = (void*) calloc (lower8bits, num_bytes);
+            ErrorCode =  0;
+        }
+        else
+            ErrorCode = -2;     //default return if neither allocation or detection is done
+    }
+    return ErrorCode;
+}
+
+int qmem_free(void ** rslt)
+{
+    int ErrorCode = -2;
 
     if (rslt == NULL)
     {
-        QPtr = (struct Q*) malloc (sizeof(struct Q));
-        QPtr -> next = NULL;
-        for (int i = 0; i < 256; i++)
-        {
-            QPtr -> Data[i] = '0';
-        }
-        ErrorCode =  0;
+        ErrorCode = -1;
     }
     else if (rslt != NULL)
     {
-        ErrorCode = qmem_alloc(sizeof(struct Q), (void **) &QPtr);
+        free(*rslt);
+        (*rslt) = NULL;
+        ErrorCode = 0;
     }
-    else
-        ErrorCode = -2;     //default return if neither allocation or detection is done
-
     return ErrorCode;
 }
-int qmem_allocv(unsigned num_bytes, int mark, void ** rslt);
-int qmem_free(void ** rslt);
 int qmem_cmp(void * p1, void * p2, int * diff);
 int qmem_cpy(void * dat, void * src);
 int qmem_scrub(void * data);
