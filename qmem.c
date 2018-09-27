@@ -3,6 +3,8 @@
 CS270, Fall 2018
 HW#3*/
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "qmem.h"
@@ -92,8 +94,86 @@ int qmem_free(void ** rslt)
     }
     return ErrorCode;
 }
-int qmem_cmp(void * p1, void * p2, int * diff);
-int qmem_cpy(void * dat, void * src);
+
+int qmem_cmp(void * p1, void * p2, int * diff)
+{
+    int ErrorCode = 5;
+    int i = 0;
+    int Difference = 100;
+
+    if (p1 == NULL)
+    {
+        ErrorCode = -1;
+    }
+    else if (p2 == NULL)
+    {
+        ErrorCode = -2;
+    }
+    else if (//p1 not allocated with qmem)
+    {
+        ErrorCode = -3;
+    }
+    else if (//p2 not allocated with qmem)
+    {
+        ErrorCode = -4;
+    }
+    else
+    {
+        for ( i = 0; i < sizeof(p1) && i < sizeof(p2); i++)
+        {
+            if (p1[i] != p2[i])
+            {
+                Difference = abs(&p1-&p2);
+                ErrorCode = 0;
+            }
+            else
+            {
+                ErrorCode = 0;
+                Difference = 0;
+            }
+        }
+    }
+
+    diff = &Difference;
+    return ErrorCode;
+}
+
+int qmem_cpy(void * dst, void * src)
+{
+    int ErrorCode = -10;
+
+    if (dst == NULL)
+    {
+        ErrorCode = -1;
+    }
+    else if (src == NULL)
+    {
+        ErrorCode = -2;
+    }
+    else if (//dst not allocated with qmem)
+    {
+        ErrorCode = -3;
+    }
+    else if (//src not allocated with qmem)
+    {
+        ErrorCode = -4;
+    }
+    else if (dst == src)
+    {
+        ErrorCode = -5;
+    }
+    else if (sizeof(dst) != sizeof(src))
+    {
+        ErrorCode = -6;
+    }
+    else
+    {
+        memcpy(&dst, &src, sizeof(src));
+        ErrorCode = 0;
+    }
+
+    return ErrorCode;
+}
 int qmem_scrub(void * data);
 int qmem_scrubv(void * data, int mark);
 int qmem_size(void * data, unsigned * rslt);
