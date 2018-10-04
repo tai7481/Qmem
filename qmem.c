@@ -7,6 +7,7 @@ HW#3*/
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "qmem.h"
 
 //Global Variables to tracks qmem usage for
@@ -33,7 +34,7 @@ int qmem_alloc(unsigned num_bytes, void ** rslt)
         {
             (*rslt) = (void*) malloc (num_bytes);
             ErrorCode =  0;
-            (*qmem)[qmemcount] = &(*rslt);
+            qmem[qmemcount] = &(*rslt);
             qmemcount++;
             qmemusage++;
         }
@@ -58,7 +59,7 @@ int qmem_allocz(unsigned num_bytes, void ** rslt)
         {
             (*rslt) = (void*) calloc (sizeof(*rslt), num_bytes);
             ErrorCode =  0;
-            (*qmem)[qmemcount] = &(*rslt);
+            qmem[qmemcount] = &(*rslt);
             qmemcount++;
             qmemusage++;
         }
@@ -85,7 +86,7 @@ int qmem_allocv(unsigned num_bytes, int mark, void ** rslt)
         {
             (*rslt) = (void*) calloc(lower8bits, num_bytes);
             ErrorCode =  0;
-            (*qmem)[qmemcount] = &(*rslt);
+            qmem[qmemcount] = &(*rslt);
             qmemcount++;
             qmemusage++;
         }
@@ -117,7 +118,7 @@ int qmem_free(void ** rslt)
 int qmem_cmp(void * p1, void * p2, int * diff)
 {
     int ErrorCode = 5;
-    int i = 0, j = 0;
+    int j = 0;
     int Difference = 100;
 
     if (p1 == NULL)
@@ -128,20 +129,17 @@ int qmem_cmp(void * p1, void * p2, int * diff)
     {
         ErrorCode = -2;
     }
-    else if ((p1 != NULL && p2 != NULL)
+    else if ((p1 != NULL && p2 != NULL))
     {
-        for ( i = 0; i < sizeof(p1) && i < sizeof(p2); i++)
+        if (p1 != p2)
         {
-            if (p1[i] != p2[i])
-            {
-                Difference = abs(&p1-&p2);
-                ErrorCode = 0;
-            }
-            else
-            {
-                ErrorCode = 0;
-                Difference = 0;
-            }
+            Difference = abs(&p1-&p2);
+            ErrorCode = 0;
+        }
+        else
+        {
+            ErrorCode = 0;
+            Difference = 0;
         }
     }
     else if (p1 != NULL)
@@ -153,7 +151,7 @@ int qmem_cmp(void * p1, void * p2, int * diff)
                 ErrorCode = -3;
             }
         }
-        continue;
+        //continue
     }
     else if (p2 != NULL)
     {
@@ -191,7 +189,7 @@ int qmem_cpy(void * dst, void * src)
                 ErrorCode = -3;
             }
         }
-        continue;
+        //continue;
     }
     else if (src != NULL)
     {
@@ -202,7 +200,7 @@ int qmem_cpy(void * dst, void * src)
                 ErrorCode = -4;
             }
         }
-        continue;
+        //continue;
     }
     else if (dst == src)
     {
@@ -224,7 +222,7 @@ int qmem_cpy(void * dst, void * src)
 int qmem_scrub(void * data)
 {
     int ErrorCode = -3;
-    void * temp - data;
+    void * temp = data;
     int j = 0;
     if (temp != NULL)
     {
@@ -235,7 +233,7 @@ int qmem_scrub(void * data)
                 ErrorCode = -2;
             }
         }
-        continue;
+        //continue;
     }
     else if (temp == NULL)
     {
@@ -243,7 +241,7 @@ int qmem_scrub(void * data)
     }
     else
     {
-        temp = calloc(temp, sizeof(data));
+        temp = calloc(temp, sizeof(temp));
         ErrorCode = 0;
     }
     return ErrorCode;
@@ -272,8 +270,8 @@ int qmem_scrubv(void * data, int mark)
     }
     else
     {
-        void * temp = (void*)calloc (lower8bits, sizeof(data))
-        data = &temp;
+        void * temp = (void*)calloc (lower8bits, sizeof(data));
+        data = temp;
         ErrorCode = 0;
     }
     return ErrorCode;
@@ -337,3 +335,4 @@ int qmem_stats(unsigned long * num_allocs, unsigned long * num_bytes_allocated)
     }
     return ErrorCode;
 }
+
