@@ -12,11 +12,11 @@ HW#3*/
 
 //Global Variables to tracks qmem usage for
 //Allocations and Initializations
-int qmemcount = 0;
-int qmemusage = 0;
+unsigned long qmemcount = 0;
+unsigned long qmemusage = 0;
 
 //Array of pointers meant to keep track of qmem usage
-void **qmem;
+void *qmem[1000];
 
 //Function Implementations
 int qmem_alloc(unsigned num_bytes, void ** rslt)
