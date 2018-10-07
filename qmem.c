@@ -21,25 +21,21 @@ void **qmem;
 //Function Implementations
 int qmem_alloc(unsigned num_bytes, void ** rslt)
 {
-    int ErrorCode = -2;
+    int ErrorCode = -3;
 
-    if (num_bytes < 0)  //checks if num_bytes is
+    if (num_bytes < 0 && rslt == NULL)
     {
         printf("Memory Allocation Error\n");
         ErrorCode = -1;
     }
     else
     {
-        if (rslt == NULL)
-        {
-            (*rslt) = (void*) malloc (num_bytes);
-            ErrorCode =  0;
-            qmem[qmemcount] = &(*rslt);
-            qmemcount++;
-            qmemusage++;
-        }
-        else
-            ErrorCode = -2;     //default return if neither allocation or detection is done
+        //(*rslt) = (void*) malloc (num_bytes);
+        void *temp = (void*) malloc (num_bytes);
+        ErrorCode =  0;
+        qmem[qmemcount] = &temp;
+        qmemcount++;
+        qmemusage++;
     }
     return ErrorCode;
 }
@@ -47,24 +43,20 @@ int qmem_alloc(unsigned num_bytes, void ** rslt)
 int qmem_allocz(unsigned num_bytes, void ** rslt)
 {
     int ErrorCode = -2;
+    int i = 0;
 
-    if (num_bytes < 0)  //checks if num_bytes is
+    if (num_bytes < 0 && rslt == NULL)
     {
         printf("Memory Allocation and Initialization Error\n");
         ErrorCode = -1;
     }
     else
     {
-        if (rslt == NULL)
-        {
-            (*rslt) = (void*) calloc (sizeof(*rslt), num_bytes);
-            ErrorCode =  0;
-            qmem[qmemcount] = &(*rslt);
-            qmemcount++;
-            qmemusage++;
-        }
-        else
-            ErrorCode = -2;     //default return if neither allocation or detection is done
+        void *temp = (void*) calloc (sizeof(*rslt), num_bytes);
+        ErrorCode =  0;
+        qmem[qmemcount] = &temp;
+        qmemcount++;
+        qmemusage++;
     }
     return ErrorCode;
 }
@@ -75,23 +67,19 @@ int qmem_allocv(unsigned num_bytes, int mark, void ** rslt)
     unsigned n = mark;
     unsigned lower8bits = n & 0xFF;
 
-    if (num_bytes < 0)  //checks if num_bytes is
+    if (num_bytes < 0 && rslt == NULL)
     {
         printf("Memory Allocation and Initialization Error\n");
         ErrorCode = -1;
     }
     else
     {
-        if (rslt == NULL)
-        {
-            (*rslt) = (void*) calloc(lower8bits, num_bytes);
-            ErrorCode =  0;
-            qmem[qmemcount] = &(*rslt);
-            qmemcount++;
-            qmemusage++;
-        }
-        else
-            ErrorCode = -2;     //default return if neither allocation or detection is done
+        //(*rslt) = (void*) calloc(lower8bits, num_bytes);
+        void *temp = (void*) calloc(lower8bits, num_bytes);
+        ErrorCode =  0;
+        qmem[qmemcount] = &temp;
+        qmemcount++;
+        qmemusage++;
     }
     return ErrorCode;
 }
