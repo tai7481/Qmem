@@ -15,10 +15,12 @@ HW#3*/
 int main()
 {
     int Code = -100;
-    void *result;
+    void *result = NULL;
 
-    Code = qmem_alloc(50, &result);
-    printf("\nError Code : %d", Code);
+    Code = qmem_alloc(50, (void**)&result);
+    printf("\nAllocation Error Code : %d\n", Code);
+    Code = qmem_free((void**) &result);
+    printf("Free Error Code : %d\n", Code);
 
     return 0;
 }
